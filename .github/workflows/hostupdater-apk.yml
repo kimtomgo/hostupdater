@@ -54,6 +54,12 @@ jobs:
           fi
           test -f sdk/package/utils/hostupdater/Makefile
 
+      - name: Prepare LuCI feed dependencies
+        working-directory: sdk
+        run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install luci-base luci-compat
+
       - name: Build hostupdater APK
         working-directory: sdk
         run: |
