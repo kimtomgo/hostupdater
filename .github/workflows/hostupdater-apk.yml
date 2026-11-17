@@ -21,6 +21,8 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    env:
+      TERM: xterm-256color
     steps:
       - name: Checkout hostupdater
         uses: actions/checkout@v4
@@ -59,6 +61,14 @@ jobs:
         run: |
           ./scripts/feeds update -a
           ./scripts/feeds install luci-base luci-compat
+
+      - name: Initialize SDK configuration
+        working-directory: sdk
+        run: |
+          make defconfig
+          test -s .config
+          grep -q '^CONFIG_TARGET_qualcommax=y' .config
+          grep -q '^CONFIG_TARGET_qualcommax_ipq807x=y' .config
 
       - name: Build hostupdater APK
         working-directory: sdk
